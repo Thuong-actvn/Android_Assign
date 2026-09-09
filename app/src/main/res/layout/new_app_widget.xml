@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Android_Assign.AppWidget.Container"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.Android_Assign.AppWidgetContainer">
+
+    <LinearLayout
+        android:id="@+id/form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_overlay"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/appwidget_text"
+                android:background="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Widget ID"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_weight="2"/>
+            <TextView
+                android:id="@+id/widget_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="24sp"
+                android:text="@string/widget_id"
+                android:layout_weight="1"
+                android:textAlignment="textEnd" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/section_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/time"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Update"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/count_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="24sp"
+                android:text="TIME"
+                />
+        </LinearLayout>
+        <Button
+            android:id="@+id/button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cornerRadius="8dp"
+            android:text="Update Now"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+</RelativeLayout>
