@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +16,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity {
 
     private SensorManager sensorManager;
-    private Sensor senSorProximity;
+    private Sensor senSorAccelerometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,38 +47,51 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         TextView sensorTV = findViewById(R.id.sensorTextView);
         sensorTV.setText(sensorText);
 
-        senSorProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        int sensorType = event.sensor.getType();
-        float currentSensor = event.values[0];
+        senSorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         TextView currentSensorTV = findViewById(R.id.CurrentSensorTextView);
-        switch (sensorType) {
-            case Sensor.TYPE_PROXIMITY:
-                currentSensorTV.setText(String.format("Acc:%s", currentSensor));
-                break;
-            default:
-        }
+        ShakeDetector shakeDetector =
+                new ShakeDetector(
+                      sensorManager,
+                        () -> {
+                            Toast.makeText(this, "Shake", Toast.LENGTH_SHORT).show();
+                        },
+                        currentSensorTV
+                );
+        shakeDetector.start();
+
+        // Em đã test Shake trên máy thật hoạt động tốt,
+        // nhưng trên Virtual Sensor thì có lắc sao thì vẫn không đủ ngưỡng lắc để hiện Toast
     }
+
+//    @Override
+//    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//    }
+
+//    @Override
+//    public void onSensorChanged(SensorEvent event) {
+//        int sensorType = event.sensor.getType();
+//        float[] currentSensor = event.values;
+//        TextView currentSensorTV = findViewById(R.id.CurrentSensorTextView);
+//        switch (sensorType) {
+//            case Sensor.TYPE_ACCELEROMETER:
+//                currentSensorTV.setText(String.format(Locale.getDefault(),"Acc: %.2f | %.2f | %.2f", currentSensor[0], currentSensor[1], currentSensor[2]));
+//                break;
+//            default:
+//        }
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(senSorProximity != null) {
-            sensorManager.registerListener(this, senSorProximity, SensorManager.SENSOR_DELAY_NORMAL);
-        }
+//        if(senSorAccelerometer != null) {
+//            sensorManager.registerListener(this, senSorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+//        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        sensorManager.unregisterListener(this);
+//        sensorManager.unregisterListener(this);
     }
 }
