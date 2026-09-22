@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">Android_Assign</string>
+    <string name="app_name">Danh sách mua sắm</string>
+    <string name="shopping_list">Danh sách mua sắm</string>
+    <string name="settings">Cài đặt</string>
+    <string name="back">Quay lại</string>
+    <string name="choose_region">Chọn ngôn ngữ và vùng</string>
+    <string name="sample_prices">Giá minh họa theo từng thị trường</string>
+    <string name="total_amount">Tổng cộng: %1$s</string>
+    <string name="region_vn" translatable="false">Việt Nam (VND)</string>
+    <string name="region_us" translatable="false">United States (USD)</string>
+    <string name="region_jp" translatable="false">日本 (JPY)</string>
+    <string-array name="products">
+        <item>Sữa</item>
+        <item>Bánh mì</item>
+        <item>Trứng</item>
+        <item>Cà phê</item>
+    </string-array>
 </resources>

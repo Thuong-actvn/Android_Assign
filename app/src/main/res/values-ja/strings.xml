@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">買い物リスト</string>
+    <string name="shopping_list">買い物リスト</string>
+    <string name="settings">設定</string>
+    <string name="back">戻る</string>
+    <string name="choose_region">言語と地域を選択</string>
+    <string name="sample_prices">各地域の参考価格</string>
+    <string name="total_amount">合計: %1$s</string>
+    <string-array name="products">
+        <item>牛乳</item>
+        <item>パン</item>
+        <item>卵</item>
+        <item>コーヒー</item>
+    </string-array>
+</resources>
