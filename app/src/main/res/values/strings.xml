@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">Android_Assign</string>
+    <string name="app_name">Theo dõi vị trí</string>
+    <string name="screen_title">Lịch sử vị trí</string>
+    <string name="screen_description">Vị trí mới sẽ được thêm lên đầu danh sách.</string>
+    <string name="status_waiting_permission">Đang chờ quyền truy cập vị trí…</string>
+    <string name="status_updating">Đang cập nhật vị trí</string>
+    <string name="status_stopped">Đã dừng cập nhật</string>
+    <string name="status_provider_off">Hãy bật dịch vụ vị trí trên thiết bị.</string>
+    <string name="status_permission_denied">Ứng dụng cần quyền vị trí để hoạt động.</string>
+    <string name="action_start">Bắt đầu</string>
+    <string name="action_stop">Dừng cập nhật</string>
+    <string name="empty_locations">Chưa có dữ liệu vị trí</string>
+    <string name="coordinate_format">Vĩ độ: %1$.6f\nKinh độ: %2$.6f</string>
+    <string name="address_format">Địa chỉ: %1$s</string>
+    <string name="time_format">Thời gian: %1$s</string>
+    <string name="address_loading">Đang tìm địa chỉ…</string>
+    <string name="address_unknown">Không tìm thấy địa chỉ</string>
 </resources>
