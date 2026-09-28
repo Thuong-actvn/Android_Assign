@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Android_Assign</string>
+    <string name="app_name">City Tour Explorer</string>
+    <string name="tour_places">1. Chợ Bến Thành\n2. Dinh Độc Lập\n3. Bến Nhà Rồng</string>
+    <string name="ben_thanh_name">Chợ Bến Thành</string>
+    <string name="independence_palace_name">Dinh Độc Lập</string>
+    <string name="nha_rong_name">Bến Nhà Rồng</string>
 </resources>
