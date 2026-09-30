@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Android_Assign</string>
+    <string name="app_name">Ghi chú</string>
+    <string name="title_hint">Tiêu đề</string>
+    <string name="content_hint">Nội dung</string>
+    <string name="add_note">Thêm ghi chú</string>
+    <string name="notes_title">Danh sách ghi chú</string>
+    <string name="delete_hint">Vuốt ghi chú sang trái để xóa</string>
+    <string name="empty_notes">Chưa có ghi chú nào.</string>
+    <string name="title_required">Vui lòng nhập tiêu đề</string>
+    <string name="created_at">Tạo lúc: %1$s</string>
+    <string name="note_deleted">Đã xóa ghi chú</string>
 </resources>
