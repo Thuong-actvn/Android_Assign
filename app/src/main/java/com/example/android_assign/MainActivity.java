@@ -1,31 +1,28 @@
 package com.example.android_assign;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private EditText titleInput;
     private EditText contentInput;
-    private LinearLayout notesContainer;
-    private NoteDao noteDao;
-    private final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
+    private NoteViewModel noteViewModel;
+    private NoteAdapter noteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +41,47 @@ public class MainActivity extends AppCompatActivity {
 
         titleInput = findViewById(R.id.titleInput);
         contentInput = findViewById(R.id.contentInput);
-        notesContainer = findViewById(R.id.notesContainer);
-        noteDao = AppDatabase.getInstance(getApplicationContext()).noteDao();
+        RecyclerView notesRecyclerView = findViewById(R.id.notesRecyclerView);
+        TextView emptyText = findViewById(R.id.emptyText);
+
+        noteAdapter = new NoteAdapter();
+        notesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        notesRecyclerView.setAdapter(noteAdapter);
+        notesRecyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+
+        // LiveData tự cập nhật danh sách khi dữ liệu trong Room thay đổi.
+        noteViewModel.getAllNotes().observe(this, notes -> {
+            noteAdapter.setNotes(notes);
+            emptyText.setVisibility(notes.isEmpty() ? View.VISIBLE : View.GONE);
+        });
 
         findViewById(R.id.addButton).setOnClickListener(v -> addNote());
-        noteDao.getAllNotes().observe(this, this::showNotes);
+
+        // Vuốt ghi chú sang trái để xóa qua ViewModel.
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getBindingAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            Note note = noteAdapter.getNote(position);
+                            noteViewModel.delete(note);
+                            Toast.makeText(MainActivity.this, R.string.note_deleted,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(notesRecyclerView);
     }
 
     private void addNote() {
@@ -63,74 +96,9 @@ public class MainActivity extends AppCompatActivity {
         note.title = title;
         note.content = content;
         note.createdAt = System.currentTimeMillis();
-        databaseExecutor.execute(() -> noteDao.insert(note));
+        noteViewModel.insert(note);
 
         titleInput.setText("");
         contentInput.setText("");
-    }
-
-    private void showNotes(List<Note> notes) {
-        notesContainer.removeAllViews();
-        if (notes.isEmpty()) {
-            TextView emptyText = new TextView(this);
-            emptyText.setText(R.string.empty_notes);
-            notesContainer.addView(emptyText);
-            return;
-        }
-
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        float swipeDistance = 80 * getResources().getDisplayMetrics().density;
-        for (Note note : notes) {
-            TextView noteView = new TextView(this);
-            String date = dateFormat.format(new Date(note.createdAt));
-            String noteText = note.title + "\n" + note.content + "\n"
-                    + getString(R.string.created_at, date);
-            noteView.setText(noteText);
-            noteView.setTextSize(16);
-            int padding = (int) (12 * getResources().getDisplayMetrics().density);
-            noteView.setPadding(padding, padding, padding, padding);
-            noteView.setBackgroundResource(android.R.drawable.list_selector_background);
-            // Vuốt sang trái để xóa; vuốt dọc để cuộn danh sách.
-            noteView.setOnTouchListener(new View.OnTouchListener() {
-                private float startX;
-                private float startY;
-
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        startX = event.getX();
-                        startY = event.getY();
-                        return true;
-                    }
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        float deltaX = event.getX() - startX;
-                        float deltaY = event.getY() - startY;
-                        if (deltaX < -swipeDistance && Math.abs(deltaX) > Math.abs(deltaY)) {
-                            databaseExecutor.execute(() -> noteDao.delete(note));
-                            Toast.makeText(MainActivity.this, R.string.note_deleted,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            view.performClick();
-                        }
-                        return true;
-                    }
-                    return true;
-                }
-            });
-            notesContainer.addView(noteView);
-
-            View divider = new View(this);
-            divider.setBackgroundResource(android.R.color.darker_gray);
-            notesContainer.addView(divider, new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int) getResources().getDisplayMetrics().density
-            ));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        databaseExecutor.shutdown();
     }
 }
